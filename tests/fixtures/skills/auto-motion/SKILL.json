@@ -1,0 +1,5 @@
+{
+  "name": "auto-motion",
+  "interface": { "displayName": "Auto Motion", "shortDescription": "Fixture" },
+  "aeCodex": { "autoInvoke": true, "actionSchema": "actions.schema.json" }
+}

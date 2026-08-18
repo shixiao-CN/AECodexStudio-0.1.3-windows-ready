@@ -1,0 +1,16 @@
+{
+  "name": "replace-me",
+  "enabled": false,
+  "interface": {
+    "displayName": "Replace Me",
+    "shortDescription": "Template for a future AE Codex skill"
+  },
+  "dependencies": {
+    "tools": []
+  },
+  "aeCodex": {
+    "autoInvoke": false,
+    "hostEntry": "host/entry.jsxinc",
+    "actionSchema": "actions.schema.json"
+  }
+}

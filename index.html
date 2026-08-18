@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src http://127.0.0.1:* ws://127.0.0.1:*; img-src 'self' data: blob:;" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AE Codex Studio</title>
+  <link rel="stylesheet" href="css/panel.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div>
+        <div class="brand">AE Codex</div>
+        <div class="subtitle">AI animation copilot</div>
+      </div>
+      <div id="connectionStatus" class="status status-offline">未连接</div>
+    </header>
+
+    <section id="skillStrip" class="skill-strip">
+      <span class="skill-dot"></span>
+      <span id="skillSummary">正在加载 ae-dev…</span>
+      <button id="openSettings" class="icon-button" title="设置">⚙</button>
+    </section>
+
+    <section id="chat" class="chat" aria-live="polite">
+      <article class="message assistant">
+        <div class="message-role">Codex</div>
+        <div class="message-body">选中图层后直接描述动画。每次请求都会自动加载 <code>ae-dev</code> 技能。</div>
+      </article>
+    </section>
+
+    <section id="pendingCard" class="pending-card hidden">
+      <div>
+        <strong id="pendingTitle">待执行操作</strong>
+        <div id="pendingSummary" class="muted"></div>
+      </div>
+      <div class="pending-actions">
+        <button id="discardActions" class="button secondary">取消</button>
+        <button id="executeActions" class="button primary">执行</button>
+      </div>
+    </section>
+
+    <section class="composer">
+      <textarea id="prompt" rows="3" placeholder="例如：让选中的标题在 1 秒内从下方滑入并淡入，最后轻微回弹。"></textarea>
+      <div class="composer-row">
+        <label class="toggle-label">
+          <input id="autoExecute" type="checkbox" checked />
+          <span>自动执行安全操作</span>
+        </label>
+        <div class="button-row">
+          <button id="inspectButton" class="button ghost" title="读取当前合成">读取</button>
+          <button id="stopButton" class="button ghost hidden">停止</button>
+          <button id="sendButton" class="button primary">发送</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="settingsDialog" class="settings-dialog">
+    <form method="dialog">
+      <header class="settings-header">
+        <strong>插件设置</strong>
+        <button value="cancel" class="icon-button">×</button>
+      </header>
+      <label class="field">
+        <span>Codex CLI 路径</span>
+        <input id="codexPath" type="text" placeholder="codex（或 codex.exe 的完整路径）" />
+      </label>
+      <p class="hint">面板通过本地 <code>codex app-server</code> 工作，不在面板中保存 API Key。</p>
+      <label class="field">
+        <span>额外技能根目录（每行一个）</span>
+        <textarea id="extraSkillRoots" rows="4" placeholder="D:\MySkills"></textarea>
+      </label>
+      <div class="settings-actions">
+        <button value="cancel" class="button secondary">取消</button>
+        <button id="saveSettings" value="default" class="button primary">保存</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="js/cep-bridge.js"></script>
+  <script src="js/skill-registry.js"></script>
+  <script src="js/protocol.js"></script>
+  <script src="js/codex-client.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

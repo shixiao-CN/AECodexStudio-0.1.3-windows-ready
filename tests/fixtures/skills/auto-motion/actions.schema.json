@@ -1,0 +1,6 @@
+{
+  "type": "object",
+  "properties": { "op": { "const": "fixture_motion" } },
+  "required": ["op"],
+  "additionalProperties": false
+}

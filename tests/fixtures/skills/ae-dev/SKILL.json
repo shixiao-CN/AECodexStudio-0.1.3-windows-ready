@@ -1,0 +1,5 @@
+{
+  "name": "ae-dev",
+  "interface": { "displayName": "AE Dev Fixture", "shortDescription": "Fixture" },
+  "aeCodex": { "autoInvoke": false }
+}

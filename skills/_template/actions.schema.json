@@ -1,0 +1,9 @@
+{
+  "type": "object",
+  "properties": {
+    "op": { "const": "replace_me" },
+    "exampleValue": { "type": "number" }
+  },
+  "required": ["op", "exampleValue"],
+  "additionalProperties": false
+}

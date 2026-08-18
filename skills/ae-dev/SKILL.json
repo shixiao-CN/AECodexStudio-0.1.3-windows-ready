@@ -1,0 +1,14 @@
+{
+  "name": "ae-dev",
+  "interface": {
+    "displayName": "After Effects Development",
+    "shortDescription": "Safely inspect and animate After Effects projects"
+  },
+  "dependencies": {
+    "tools": []
+  },
+  "aeCodex": {
+    "autoInvoke": true,
+    "hostEntry": null
+  }
+}

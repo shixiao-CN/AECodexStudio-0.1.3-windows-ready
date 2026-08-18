@@ -1,0 +1,7 @@
+# Dependencies are restored from package.json and pnpm-lock.yaml.
+node_modules/
+
+# Local logs and temporary files.
+*.log
+.DS_Store
+Thumbs.db

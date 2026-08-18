@@ -1,0 +1,7 @@
+/* Copy this template directory, enable it in SKILL.json, and choose a unique operation name. */
+(function () {
+    AECodex.registerOperation("replace_me", function (action, comp) {
+        /* Validate every action field before changing the project. */
+        return { message: "Replace this handler with a safe AE operation." };
+    });
+}());
