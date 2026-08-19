@@ -119,7 +119,10 @@
     });
     var skills = registry.scan();
     var auto = registry.autoSkills();
-    els.skillSummary.textContent = auto.length ? "自动技能：" + auto.map(function (skill) { return skill.name; }).join(", ") : "未找到 ae-dev 技能";
+    var conditional = ["ae-bezier-paths", "curves-and-paths"].filter(function (name) {
+      return skills.some(function (skill) { return skill.name.toLowerCase() === name; });
+    });
+    els.skillSummary.textContent = auto.length ? ("自动技能：" + auto.map(function (skill) { return skill.name; }).join(", ") + (conditional.length ? " · 贝塞尔时：" + conditional.join(", ") : "")) : "未找到 ae-dev 技能";
 
     var moduleLoads = registry.hostModules().map(function (skill) {
       var encoded = encodeURIComponent(JSON.stringify(skill.hostEntry));
@@ -196,8 +199,8 @@
       await hostModulesReady;
       var aeSnapshot = await inspectAE();
       if (!client) { client = makeClient(); }
-      var prompt = AEProtocol.buildPrompt(userText, aeSnapshot, registry.markers());
-      var responseText = await client.runTurn(prompt, registry.inputItems(), AEProtocol.createOutputSchema(registry.actionSchemas(), userText));
+      var prompt = AEProtocol.buildPrompt(userText, aeSnapshot, registry.markers(userText));
+      var responseText = await client.runTurn(prompt, registry.inputItems(userText), AEProtocol.createOutputSchema(registry.actionSchemas(userText), userText));
       var response = AEProtocol.validateForSnapshot(AEProtocol.parseResult(responseText), aeSnapshot);
       activeAssistantBody.textContent = response.message;
       if (response.actions.length) {

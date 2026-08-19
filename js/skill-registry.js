@@ -91,26 +91,51 @@
     return this.skills.filter(function (skill) { return skill.autoInvoke; });
   };
 
-  Registry.prototype.inputItems = function () {
-    return this.autoSkills().map(function (skill) {
+  Registry.prototype.isBezierPathRequest = function (userText) {
+    var text = String(userText || "");
+    var spatialPath = /(蒙版|遮罩|形状|轮廓|路径|曲面|波浪|描边|孔洞|开口|控制点|切线|顶点|mask|shape|silhouette|contour|path|s[ -]?curve|wave|vertex|tangent)/i.test(text);
+    var genericCurve = /(曲线|curve|spline)/i.test(text);
+    var bezier = /(贝塞尔|bezier|inTangents|outTangents)/i.test(text);
+    var temporalOnly = /(贝塞尔缓动|速度图表|速度曲线|时间曲线|关键帧插值|temporal easing|speed graph)/i.test(text);
+    if (temporalOnly && !spatialPath) { return false; }
+    return spatialPath || genericCurve || bezier;
+  };
+
+  Registry.prototype.requestSkills = function (userText) {
+    var selected = this.autoSkills().slice();
+    var selectedNames = {};
+    selected.forEach(function (skill) { selectedNames[skill.name.toLowerCase()] = true; });
+    var conditionalNames = this.isBezierPathRequest(userText) ? ["ae-bezier-paths", "curves-and-paths"] : [];
+    this.skills.forEach(function (skill) {
+      var key = skill.name.toLowerCase();
+      if (conditionalNames.indexOf(key) >= 0 && !selectedNames[key]) {
+        selectedNames[key] = true;
+        selected.push(skill);
+      }
+    });
+    return selected;
+  };
+
+  Registry.prototype.inputItems = function (userText) {
+    return this.requestSkills(userText).map(function (skill) {
       return { type: "skill", name: skill.name, path: skill.path };
     });
   };
 
-  Registry.prototype.markers = function () {
-    return this.autoSkills().map(function (skill) { return "$" + skill.name; }).join(" ");
+  Registry.prototype.markers = function (userText) {
+    return this.requestSkills(userText).map(function (skill) { return "$" + skill.name; }).join(" ");
   };
 
-  Registry.prototype.hostModules = function () {
+  Registry.prototype.hostModules = function (userText) {
     var fs = this.fs;
-    return this.autoSkills().filter(function (skill) {
+    return this.requestSkills(userText).filter(function (skill) {
       return skill.hostEntry && fs.existsSync(skill.hostEntry);
     });
   };
 
-  Registry.prototype.actionSchemas = function () {
+  Registry.prototype.actionSchemas = function (userText) {
     var result = [];
-    this.autoSkills().forEach(function (skill) {
+    this.requestSkills(userText).forEach(function (skill) {
       result = result.concat(skill.actionSchemas || []);
     });
     return result;
