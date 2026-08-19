@@ -72,6 +72,11 @@
         <span>额外技能根目录（每行一个）</span>
         <textarea id="extraSkillRoots" rows="4" placeholder="D:\MySkills"></textarea>
       </label>
+      <label class="field">
+        <span>同时启用的 Skill（每行一个名称）</span>
+        <textarea id="activeSkillNames" rows="4" placeholder="ae-dev&#10;my-animation-skill"></textarea>
+      </label>
+      <p class="hint"><code>ae-dev</code> 始终启用；这里列出的多个 Skill 会同时作为输入、动作 Schema 和宿主模块加载。</p>
       <div class="settings-actions">
         <button value="cancel" class="button secondary">取消</button>
         <button id="saveSettings" value="default" class="button primary">保存</button>

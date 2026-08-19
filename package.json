@@ -1,6 +1,6 @@
 {
   "name": "ae-codex-studio",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "private": true,
   "description": "Dockable After Effects panel powered by the local Codex app-server",
   "dependencies": {

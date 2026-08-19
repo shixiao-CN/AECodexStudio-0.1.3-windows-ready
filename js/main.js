@@ -33,6 +33,7 @@
     openSettings: document.getElementById("openSettings"),
     codexPath: document.getElementById("codexPath"),
     extraSkillRoots: document.getElementById("extraSkillRoots"),
+    activeSkillNames: document.getElementById("activeSkillNames"),
     saveSettings: document.getElementById("saveSettings")
   };
 
@@ -60,9 +61,12 @@
   function loadSettings() {
     var extra;
     try { extra = JSON.parse(localStorage.getItem("aeCodex.extraSkillRoots") || "[]"); } catch (err) { extra = []; }
+    var active;
+    try { active = JSON.parse(localStorage.getItem("aeCodex.activeSkillNames") || "[\"ae-dev\"]"); } catch (activeErr) { active = ["ae-dev"]; }
     return {
       codexPath: localStorage.getItem("aeCodex.codexPath") || "codex",
-      extraSkillRoots: extra
+      extraSkillRoots: extra,
+      activeSkillNames: active
     };
   }
 
@@ -109,7 +113,8 @@
     registry = new AESkillRegistry.Registry({
       fs: fs, path: path, os: os, extensionRoot: extensionRoot,
       extraRoots: settings.extraSkillRoots,
-      requiredAutoSkills: ["ae-dev"]
+      requiredAutoSkills: ["ae-dev"],
+      activeSkillNames: settings.activeSkillNames
     });
     var skills = registry.scan();
     var auto = registry.autoSkills();
@@ -192,7 +197,7 @@
       if (!client) { client = makeClient(); }
       var prompt = AEProtocol.buildPrompt(userText, aeSnapshot, registry.markers());
       var responseText = await client.runTurn(prompt, registry.inputItems(), AEProtocol.createOutputSchema(registry.actionSchemas(), userText));
-      var response = AEProtocol.parseResult(responseText);
+      var response = AEProtocol.validateForSnapshot(AEProtocol.parseResult(responseText), aeSnapshot);
       activeAssistantBody.textContent = response.message;
       if (response.actions.length) {
         if (els.autoExecute.checked && !response.needsConfirmation) { await executeActions(response.actions); }
@@ -229,12 +234,16 @@
     var settings = loadSettings();
     els.codexPath.value = settings.codexPath;
     els.extraSkillRoots.value = settings.extraSkillRoots.join("\n");
+    els.activeSkillNames.value = settings.activeSkillNames.join("\n");
     els.settings.showModal();
   });
   els.saveSettings.addEventListener("click", function () {
     localStorage.setItem("aeCodex.codexPath", els.codexPath.value.trim() || "codex");
     var roots = els.extraSkillRoots.value.split(/\r?\n/).map(function (value) { return value.trim(); }).filter(Boolean);
     localStorage.setItem("aeCodex.extraSkillRoots", JSON.stringify(roots));
+    var skillNames = els.activeSkillNames.value.split(/\r?\n|,/).map(function (value) { return value.trim(); }).filter(Boolean);
+    if (skillNames.map(function (name) { return name.toLowerCase(); }).indexOf("ae-dev") < 0) { skillNames.unshift("ae-dev"); }
+    localStorage.setItem("aeCodex.activeSkillNames", JSON.stringify(skillNames));
     if (client) { client.stop(); client = null; }
     refreshSkills();
   });

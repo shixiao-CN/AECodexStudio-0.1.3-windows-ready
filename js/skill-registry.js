@@ -26,6 +26,7 @@
     this.extensionRoot = options.extensionRoot;
     this.extraRoots = options.extraRoots || [];
     this.requiredAutoSkills = options.requiredAutoSkills || ["ae-dev"];
+    this.activeSkillNames = options.activeSkillNames || [];
     this.skills = [];
   }
 
@@ -78,7 +79,7 @@
       });
     });
 
-    var required = this.requiredAutoSkills.map(function (name) { return name.toLowerCase(); });
+    var required = this.requiredAutoSkills.concat(this.activeSkillNames).map(function (name) { return name.toLowerCase(); });
     ordered.forEach(function (skill) {
       if (required.indexOf(skill.name.toLowerCase()) !== -1) { skill.autoInvoke = true; }
     });
@@ -102,14 +103,14 @@
 
   Registry.prototype.hostModules = function () {
     var fs = this.fs;
-    return this.skills.filter(function (skill) {
+    return this.autoSkills().filter(function (skill) {
       return skill.hostEntry && fs.existsSync(skill.hostEntry);
     });
   };
 
   Registry.prototype.actionSchemas = function () {
     var result = [];
-    this.skills.forEach(function (skill) {
+    this.autoSkills().forEach(function (skill) {
       result = result.concat(skill.actionSchemas || []);
     });
     return result;
