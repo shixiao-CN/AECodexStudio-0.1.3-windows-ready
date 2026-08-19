@@ -1,4 +1,4 @@
-# AE Codex Studio 0.2.0
+# AE Codex Studio 0.3.0
 
 AE Codex Studio 是一个可停靠的 After Effects CEP 面板。它通过本地 `codex app-server` 进行对话，把 Codex 返回的结构化动作交给安全的 ExtendScript 宿主桥执行。
 
@@ -8,8 +8,12 @@ AE Codex Studio 是一个可停靠的 After Effects CEP 面板。它通过本地
 - 通过稳定的 matchName 添加任意已安装效果，读取并设置效果子属性。
 - 读取活动合成中的图层、来源、文本、形状、蒙版、效果、颜色、透明度和 Alpha 解释信息。
 - 创建纯色层，拆分、复制图层，以及把指定图层预合成。
-- 对注册动作无法覆盖的工作，可在明确确认后执行 AE ExtendScript；任意 JSX 永远不会自动执行。
+- 对注册动作无法覆盖的 AE 内存操作，可使用受限 ExtendScript 兜底；文件写入、删除、重命名、Shell 和网络调用会被拒绝。
 - 设置中可同时启用多个 Skill，它们会共同注入提示、动作 Schema 和宿主模块。
+- 调用已有 `.jsx` / `.jsxbin` AE 脚本，且不会改写现有脚本或代码文件。
+- 创建文字、段落文字、纯色、形状、空对象、调整、摄像机、灯光、素材、音频和合成图层。
+- 控制图层开关、父子级、轨道遮罩、蒙版模式、混合模式，以及任意可关键帧属性。
+- Codex 返回动作后直接在一个 Undo Group 中完成制作；面板提供“撤销”按钮，不再显示执行确认层。
 
 - 自动读取活动合成、时间、尺寸和选中图层的变换属性。
 - 每次请求自动附加用户的 `$ae-dev` 技能；找不到用户版本时使用插件内置副本。
@@ -91,7 +95,7 @@ AE Codex Studio 是一个可停靠的 After Effects CEP 面板。它通过本地
 - Codex thread 使用 `approvalPolicy: never` 和只读沙箱。
 - 面板拒绝 Codex 发起的命令、文件修改和权限审批。
 - Codex不能向 AE 发送任意 JSX，只能使用输出 Schema 中列出的动作。
-- 预合成会进入人工确认卡片。
+- 所有动作直接执行，并可通过面板“撤销”按钮或 AE 原生撤销恢复。
 - 插件不会自动保存或覆盖 `.aep` 文件。
 
 ## 开发验证

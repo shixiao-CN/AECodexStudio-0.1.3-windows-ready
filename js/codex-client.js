@@ -62,7 +62,7 @@
     lines.on("line", function (line) { self._handleLine(line); });
 
     await this.request("initialize", {
-      clientInfo: { name: "ae_codex_studio", title: "AE Codex Studio", version: "0.2.0" }
+      clientInfo: { name: "ae_codex_studio", title: "AE Codex Studio", version: "0.3.0" }
     });
     this.notify("initialized", {});
     var started = await this.request("thread/start", {

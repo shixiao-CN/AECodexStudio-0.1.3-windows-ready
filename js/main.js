@@ -22,6 +22,7 @@
     send: document.getElementById("sendButton"),
     stop: document.getElementById("stopButton"),
     inspect: document.getElementById("inspectButton"),
+    undo: document.getElementById("undoButton"),
     status: document.getElementById("connectionStatus"),
     skillSummary: document.getElementById("skillSummary"),
     autoExecute: document.getElementById("autoExecute"),
@@ -167,7 +168,7 @@
     setStatus("正在修改 AE", "busy");
     var raw = await bridge.callEncoded("executeBatchEncoded", actions);
     var result = bridge.parseResult(raw);
-    addMessage("assistant", "已执行 " + result.results.length + " 个动作。可在 AE 中使用 Ctrl+Z 撤销。\n日志：" + result.logPath);
+    addMessage("assistant", "已完成 " + result.results.length + " 个 AE 动作。需要时可点击下方“撤销”。\n日志：" + result.logPath);
     setStatus("已连接", "online");
     pendingActions = null;
     els.pendingCard.classList.add("hidden");
@@ -200,8 +201,7 @@
       var response = AEProtocol.validateForSnapshot(AEProtocol.parseResult(responseText), aeSnapshot);
       activeAssistantBody.textContent = response.message;
       if (response.actions.length) {
-        if (els.autoExecute.checked && !response.needsConfirmation) { await executeActions(response.actions); }
-        else { showPending(response.actions, response.needsConfirmation ? "需要确认" : "等待执行"); }
+        await executeActions(response.actions);
       } else {
         setStatus("已连接", "online");
       }
@@ -227,6 +227,19 @@
       var comp = snapshot.activeComp;
       addMessage("assistant", comp ? ("当前合成：" + comp.name + " · 已选 " + comp.selectedLayers.length + " 个图层") : "当前没有活动合成。");
     } catch (err) { addMessage("assistant", err.message, "error"); }
+  });
+  els.undo.addEventListener("click", async function () {
+    try {
+      els.undo.disabled = true;
+      setStatus("正在撤销", "busy");
+      var raw = await bridge.evalScript("AECodex.undo()");
+      bridge.parseResult(raw);
+      addMessage("assistant", "已撤销最近一次 AE 操作。");
+      setStatus("已连接", "online");
+    } catch (err) {
+      addMessage("assistant", "撤销失败：" + err.message, "error");
+      setStatus("发生错误", "error");
+    } finally { els.undo.disabled = false; }
   });
   els.executeActions.addEventListener("click", function () { if (pendingActions) { executeActions(pendingActions).catch(function (err) { addMessage("assistant", err.message, "error"); }); } });
   els.discardActions.addEventListener("click", function () { pendingActions = null; els.pendingCard.classList.add("hidden"); });

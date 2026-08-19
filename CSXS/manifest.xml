@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ExtensionManifest Version="7.0"
   ExtensionBundleId="com.aecodex.panel"
-  ExtensionBundleVersion="0.2.0"
+  ExtensionBundleVersion="0.3.0"
   ExtensionBundleName="AE Codex Studio"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <ExtensionList>
-    <Extension Id="com.aecodex.panel.main" Version="0.2.0" />
+    <Extension Id="com.aecodex.panel.main" Version="0.3.0" />
   </ExtensionList>
   <ExecutionEnvironment>
     <HostList>

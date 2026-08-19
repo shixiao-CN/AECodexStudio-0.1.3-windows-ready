@@ -30,7 +30,7 @@
       </article>
     </section>
 
-    <section id="pendingCard" class="pending-card hidden">
+    <section id="pendingCard" class="pending-card hidden" aria-hidden="true">
       <div>
         <strong id="pendingTitle">待执行操作</strong>
         <div id="pendingSummary" class="muted"></div>
@@ -44,11 +44,12 @@
     <section class="composer">
       <textarea id="prompt" rows="3" placeholder="例如：让选中的标题在 1 秒内从下方滑入并淡入，最后轻微回弹。"></textarea>
       <div class="composer-row">
-        <label class="toggle-label">
+        <label class="toggle-label hidden" aria-hidden="true">
           <input id="autoExecute" type="checkbox" checked />
-          <span>自动执行安全操作</span>
+          <span>直接执行</span>
         </label>
         <div class="button-row">
+          <button id="undoButton" class="button secondary" title="撤销最近一次 AE 操作">撤销</button>
           <button id="inspectButton" class="button ghost" title="读取当前合成">读取</button>
           <button id="stopButton" class="button ghost hidden">停止</button>
           <button id="sendButton" class="button primary">发送</button>
